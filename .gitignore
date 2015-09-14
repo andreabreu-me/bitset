@@ -13,8 +13,8 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
+# Vim temporary files 
+*.swp
 
 # Compiled Static libraries
 *.lai
@@ -26,3 +26,7 @@
 *.exe
 *.out
 *.app
+
+# Temporary folders
+test/unit/lib/*
+build/*
