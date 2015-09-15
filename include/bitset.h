@@ -17,7 +17,6 @@ class Bitset{
 		typedef libbitset::size_t size_t;
 		typedef BaseType base_type;
 		typedef Iterator<Bitset> iterator;
-		typedef const Iterator<const Bitset> const_iterator;
 
 		const size_t base_type_size = sizeof(base_type) << 3;
 		const uint64_t base_type_mask = sizeof(base_type)==sizeof(uint64_t) ? (uint64_t)-1 : ((uint64_t)1 << base_type_size) - 1;
@@ -41,15 +40,11 @@ class Bitset{
 		~Bitset(){}
 
 		size_t size() const {return size_;}
-		//const_iterator operator [] (size_t idx) const {
-		//	return const_iterator(&value_[idx >> ( sizeof(base_type) + 2)], idx & (base_type_size- 1));
-		//}
 		iterator operator [] (size_t idx) {
 			return iterator(&value_[idx >> ( sizeof(base_type) + 2)], idx & (base_type_size- 1));
 		}
 		iterator begin() {return (*this)[0];}
-		//const_iterator begin() const {return (*this)[0];}
-		const_iterator end() const {return (*this)[size_];}
+		iterator end() {return (*this)[size_];}
 
 		uint64_t value() const {
 			// TODO: assert(array_size <= sizeof(uint64_t)

@@ -10,7 +10,11 @@ class Iterator {
 
 		operator bool () const { return this->operator*();}
 		bool operator * () const { return data_[0] & (1 << idx_);}
-		Iterator<T>& operator * () { /*data_[0] |= (1 << idx_); */return *this;}
+		Iterator<T> operator ++(int) {
+			Iterator<T> result(*this);
+			++(*this);
+			return result;
+		} 
 		Iterator<T>& operator ++() { 
 			++idx_;
 			if ( (sizeof(typename T::base_type)<<3) <= idx_) {
@@ -20,7 +24,13 @@ class Iterator {
 			return *this;
 		}
 		
-	//private:
+		bool operator == (const Iterator<T>& rhs) {
+			return rhs.data_ == data_ && rhs.idx_ == idx_;
+		}
+		bool operator != (const Iterator<T>& rhs) {
+			return !(*this == rhs);
+		}
+	private:
 		const typename T::base_type* data_;
 		typename T::size_t idx_;
 };

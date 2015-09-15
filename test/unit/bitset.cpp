@@ -103,13 +103,4 @@ TEST(bitset, random_access) {
 	EXPECT_EQ(1, bs[60]);
 }
 
-TEST(bitset, const_iterator) {
-	Bitset<30> bs(0b101);
-	Bitset<30>::iterator it = bs.begin();
 
-	EXPECT_EQ(1, it);
-	++it;
-	EXPECT_EQ(0, it);
-	++it;
-	EXPECT_EQ(1, it);
-}
