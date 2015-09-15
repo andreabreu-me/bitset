@@ -28,14 +28,14 @@ TEST(bitset_test, test) {
 	EXPECT_EQ(5, bs5.value());
 }
 
-TEST(bitset_test, base_type) {
+TEST(bitset_test, value_type) {
 	Bitset<20> bsChar;
 	Bitset<20,int> bsInt;
 	Bitset<20,libbitset::uint64_t> bsLong;
 
-	EXPECT_EQ(sizeof(unsigned char) << 3, bsChar.base_type_size);
-	EXPECT_EQ(sizeof(int) << 3, bsInt.base_type_size);
-	EXPECT_EQ(sizeof(libbitset::uint64_t) << 3, bsLong.base_type_size);
+	EXPECT_EQ(sizeof(unsigned char) << 3, bsChar.value_type_size);
+	EXPECT_EQ(sizeof(int) << 3, bsInt.value_type_size);
+	EXPECT_EQ(sizeof(libbitset::uint64_t) << 3, bsLong.value_type_size);
 }
 
 
@@ -92,7 +92,7 @@ TEST(bitset_test, value) {
 	EXPECT_EQ(ui, bs24i.value());
 }
 
-TEST(bitset, random_access) {
+TEST(bitset_test, random_access) {
 	unsigned long long ui = 1 << 1 | 1 << 11 | 1 << 20 | ((unsigned long long)1) << 60;
 	Bitset<64, unsigned short> bs(ui);
 
@@ -101,6 +101,24 @@ TEST(bitset, random_access) {
 	EXPECT_EQ(1, bs[11]);
 	EXPECT_EQ(1, bs[20]);
 	EXPECT_EQ(1, bs[60]);
+	
+	bs[0] = 1;
+	EXPECT_EQ(1, bs[0]);
+	bs[60] = 0;
+	EXPECT_EQ(0, bs[60]);
+
+	unsigned long ul = 1 | 1 << 1 | 1 << 11 | 1 << 20; 
+	EXPECT_EQ(ul, bs.value());
 }
 
+TEST(bitset_test, streamreader) {
+	unsigned char data[4] = {1,2,4,8};
+	unsigned long ui = 1 | 2 << 8 | 4 << 16 | 8 << 24;
+	Bitset<32> bs;
+	StreamRedader reader;
 
+	for (unsigned char i = 0; i < sizeof(data)/sizeof(data[0]); ++i)
+		reader(bs, data[i]);
+
+	ASSERT_EQ(ui, bs.value());
+}

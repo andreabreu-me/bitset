@@ -19,7 +19,7 @@ ExternalProject_Get_Property(GTest source_dir)
 include_directories("${source_dir}/include" "${PROJECT_SOURCE_DIR}/../../include")
 
 #binary
-set(SOURCE bitset.cpp iterator.cpp)
+set(SOURCE bitset.cpp iterator.cpp streamreader.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE})
 
 #libraries
