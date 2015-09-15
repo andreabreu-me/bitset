@@ -53,7 +53,7 @@ TEST(bitset_test, clearbit) {
 }
 
 TEST(bitset_test, setbit) {
-	Bitset<20> bs(0);
+	Bitset<30> bs(0);
 
 	EXPECT_EQ(0, bs.value());
 
@@ -65,6 +65,11 @@ TEST(bitset_test, setbit) {
 
 	bs.set(2);
 	EXPECT_EQ(7, bs.value());
+
+	bs.set(10);
+	bs.set(25);
+	unsigned long long ui = 0b10000000000000010000000111;
+	EXPECT_EQ(ui, bs.value());
 }
 
 TEST(bitset_test, int64) {
@@ -76,3 +81,35 @@ TEST(bitset_test, int64) {
 	EXPECT_EQ(ul, bs256.value());
 }
 
+TEST(bitset_test, value) {
+	unsigned long long ui = 1 << 1 | 1 << 11 | 1 << 20 | (unsigned long long)1 << 60;
+	Bitset<64, unsigned char> bs24c(ui);
+	Bitset<64, unsigned short> bs24s(ui);
+	Bitset<64, unsigned int> bs24i(ui);
+
+	EXPECT_EQ(ui, bs24c.value());
+	EXPECT_EQ(ui, bs24s.value());
+	EXPECT_EQ(ui, bs24i.value());
+}
+
+TEST(bitset, random_access) {
+	unsigned long long ui = 1 << 1 | 1 << 11 | 1 << 20 | ((unsigned long long)1) << 60;
+	Bitset<64, unsigned short> bs(ui);
+
+	EXPECT_EQ(0, bs[0]);
+	EXPECT_EQ(1, bs[1]);
+	EXPECT_EQ(1, bs[11]);
+	EXPECT_EQ(1, bs[20]);
+	EXPECT_EQ(1, bs[60]);
+}
+
+TEST(bitset, const_iterator) {
+	Bitset<30> bs(0b101);
+	Bitset<30>::iterator it = bs.begin();
+
+	EXPECT_EQ(1, it);
+	++it;
+	EXPECT_EQ(0, it);
+	++it;
+	EXPECT_EQ(1, it);
+}
