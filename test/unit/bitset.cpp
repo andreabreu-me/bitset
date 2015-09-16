@@ -132,6 +132,11 @@ TEST(bitset_test, random_access) {
 	unsigned long ul = 1 | 1 << 1 | 1 << 11 | 1 << 20; 
 	EXPECT_EQ(ul, bs.value());
 }
+TEST(bitset_test, bigbitset){
+	Bitset<1<<23> bs(1<<30);	// sizeof(bs) = 1M
+
+	EXPECT_EQ(1<<30, bs.value());
+}
 
 TEST(bitset_test, streamreader) {
 	unsigned char data[4] = {1,2,4,8};
@@ -171,3 +176,4 @@ TEST_F(AssertTest, assert_clear) {
 TEST_F(AssertTest, assert_constructor) {
 	ASSERT_DEATH(Bitset<5>(256), "");
 }
+

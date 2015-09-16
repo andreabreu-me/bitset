@@ -1,8 +1,9 @@
 #ifndef __LIBBITSET_BITSET_H__
 #define __LIBBITSET_BITSET_H__
 
-#include <cstring> //memset
-#include <cassert>
+#include <cstring>	// memset
+#include <cassert>	// assert
+#include <ostream>	// ostream << 
 #include "traits.h"
 #include "iterator.h"
 #include "streamreader.h"
@@ -118,4 +119,13 @@ class Bitset{
 };// Bitset
 
 };// namespace
+
+template <libbitset::size_t size_, class BaseType>
+std::ostream& operator<< (std::ostream& os, const libbitset::Bitset<size_, BaseType>& rhs){
+	libbitset::size_t idx = size_;
+	do{
+		os.put(rhs.test(--idx) ? '1' : '0');
+	}while(idx);
+	return os;
+}
 #endif// __LIBBITSET_BITSET_H__

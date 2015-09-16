@@ -4,8 +4,7 @@
 template <size_t size_, typename BaseType = unsigned char>
 class Bitset{
 	private:
-		BaseType value_[(size_ >> (sizeof(value_type) + 2)) + 
-			((size_ & ((sizeof(value_type) << 3) - 1)) ? 1 : 0)];
+		BaseType value_[size_of_array];
 };
 ```
 Данные хранятся последовательно в непрерывном массиве. Доступ к элементам битового множества реализован двумя способами:
