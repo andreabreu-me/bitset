@@ -28,6 +28,28 @@ TEST(bitset_test, test) {
 	EXPECT_EQ(5, bs5.value());
 }
 
+TEST(bitset_test, test2) {
+	unsigned long long ui = 1 << 1 | 1 << 11 | 1 << 20;
+	Bitset<64, unsigned char> bs64c(ui);
+	Bitset<64, unsigned short> bs64s(ui);
+	Bitset<64, unsigned int> bs64i(ui);
+
+	EXPECT_EQ(0, bs64c.test(0));
+	EXPECT_EQ(1, bs64c.test(1));
+	EXPECT_EQ(1, bs64c.test(11));
+	EXPECT_EQ(1, bs64c.test(20));
+
+	EXPECT_EQ(0, bs64s.test(0));
+	EXPECT_EQ(1, bs64s.test(1));
+	EXPECT_EQ(1, bs64s.test(11));
+	EXPECT_EQ(1, bs64s.test(20));
+
+	EXPECT_EQ(0, bs64i.test(0));
+	EXPECT_EQ(1, bs64i.test(1));
+	EXPECT_EQ(1, bs64i.test(11));
+	EXPECT_EQ(1, bs64i.test(20));
+}
+
 TEST(bitset_test, value_type) {
 	Bitset<20> bsChar;
 	Bitset<20,int> bsInt;
@@ -114,6 +136,7 @@ TEST(bitset_test, random_access) {
 TEST(bitset_test, streamreader) {
 	unsigned char data[4] = {1,2,4,8};
 	unsigned long ui = 1 | 2 << 8 | 4 << 16 | 8 << 24;
+	Bitset<32> bsIt(&data[0], &data[sizeof(data)/sizeof(data[0])]);
 	Bitset<32> bs;
 	StreamRedader reader;
 
@@ -121,4 +144,26 @@ TEST(bitset_test, streamreader) {
 		reader(bs, data[i]);
 
 	ASSERT_EQ(ui, bs.value());
+	ASSERT_EQ(ui, bsIt.value());
+}
+
+class AssertTest : public ::testing::Test {
+	protected:
+		static void SetUpTestCase() {
+			::testing::FLAGS_gtest_death_test_style = "threadsafe";
+		}
+	public:
+		Bitset<3> bs;
+};
+
+TEST_F(AssertTest, assert_set) {
+	ASSERT_DEATH(bs.set(4), "");
+}
+
+TEST_F(AssertTest, assert_test) {
+	ASSERT_DEATH(bs.test(4), "");
+}
+
+TEST_F(AssertTest, assert_clear) {
+	ASSERT_DEATH(bs.clear(4), "");
 }
