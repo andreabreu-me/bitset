@@ -6,10 +6,11 @@
 	CONCAT(sample,sample_num)();
 
 extern void sample1();
+extern void sample2();
 
 int main(int argc, const char* argv[]){
 	RUN_SAMPLE(1);
-	RUN_SAMPLE(1);
+	RUN_SAMPLE(2);
 	RUN_SAMPLE(1);
 	return 0;
 }

@@ -9,6 +9,10 @@ class Iterator {
 		Iterator(typename T::value_type* data, typename T::size_t idx) : data_(data), idx_(idx) {}
 
 		operator bool () const { return this->operator*();}
+		Iterator<T>& operator = (Iterator<T>& val) {
+			*this = (bool)val;
+			return *this;
+		}
 		Iterator<T>& operator = (bool val) {
 			if (val)
 				data_[0] |= 1 << idx_;
