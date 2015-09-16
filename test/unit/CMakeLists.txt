@@ -19,14 +19,14 @@ ExternalProject_Get_Property(GTest source_dir)
 include_directories("${source_dir}/include" "${PROJECT_SOURCE_DIR}/../../include")
 
 #binary
-set(SOURCE bitset.cpp iterator.cpp streamreader.cpp)
+set(SOURCE main.cpp bitset.cpp iterator.cpp streamreader.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE})
 
 #libraries
 ExternalProject_Get_Property(GTest BINARY_DIR)
 add_library(gtest SHARED IMPORTED)
-add_library(gtest_main SHARED IMPORTED)
+#add_library(gtest_main SHARED IMPORTED)
 #add_library(bitset SHARED IMPORTED)
 set_property(TARGET gtest PROPERTY IMPORTED_LOCATION ${BINARY_DIR}/libgtest.a)
-set_property(TARGET gtest_main PROPERTY IMPORTED_LOCATION ${BINARY_DIR}/libgtest_main.a)
-target_link_libraries(${PROJECT_NAME} gtest gtest_main pthread bitset)
+#set_property(TARGET gtest_main PROPERTY IMPORTED_LOCATION ${BINARY_DIR}/libgtest_main.a)
+target_link_libraries(${PROJECT_NAME} gtest pthread bitset)
