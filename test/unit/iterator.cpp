@@ -24,10 +24,12 @@ TEST(iterator_test, increment) {
 	EXPECT_EQ(1, it);
 }
 
-struct It{
-	public:
-		typedef int difference_type;
-};
+TEST(iterator_test, copy) {
+	Bitset<2> bs;
+	bs[0] = bs[1] = 1;
+
+	EXPECT_EQ(3, bs.value());
+}
 
 struct IteratorTestCounter {
 	IteratorTestCounter() : count(0){}

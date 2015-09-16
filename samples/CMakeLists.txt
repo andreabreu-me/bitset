@@ -7,5 +7,5 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 include_directories("${PROJECT_SOURCE_DIR}/../../include")
 
 #binary
-set(SOURCE main.cpp sample1.cpp sample2.cpp)
+set(SOURCE main.cpp sample1.cpp sample2.cpp sample3.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE})

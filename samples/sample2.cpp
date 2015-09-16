@@ -1,5 +1,6 @@
 /*
- * sample bit access
+ * Sample #2
+ * Bit access
  */
 #include <bitset.h>
 #include <iostream>

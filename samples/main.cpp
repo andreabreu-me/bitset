@@ -7,10 +7,11 @@
 
 extern void sample1();
 extern void sample2();
+extern void sample3();
 
 int main(int argc, const char* argv[]){
 	RUN_SAMPLE(1);
 	RUN_SAMPLE(2);
-	RUN_SAMPLE(1);
+	RUN_SAMPLE(3);
 	return 0;
 }
