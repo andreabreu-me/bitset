@@ -76,13 +76,6 @@ class Bitset{
 		}
 		// --direct access
 
-		// read stream of sizeof(value_type) bytes
-		size_t on_read_data(value_type val, size_t idx) {
-			// TODO assert( idx < array_length
-			value_[idx] = val;
-			return ++idx;
-		}
-
 		// return the first sizeof(uint_64) bytes
 		uint64_t value() const {
 			// TODO: assert(array_size <= sizeof(uint64_t)

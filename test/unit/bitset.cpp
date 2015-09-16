@@ -142,13 +142,7 @@ TEST(bitset_test, streamreader) {
 	unsigned char data[4] = {1,2,4,8};
 	unsigned long ui = 1 | 2 << 8 | 4 << 16 | 8 << 24;
 	Bitset<32> bsIt(&data[0], &data[sizeof(data)/sizeof(data[0])]);
-	Bitset<32> bs;
-	StreamRedader reader;
 
-	for (unsigned char i = 0; i < sizeof(data)/sizeof(data[0]); ++i)
-		reader(bs, data[i]);
-
-	ASSERT_EQ(ui, bs.value());
 	ASSERT_EQ(ui, bsIt.value());
 }
 
