@@ -62,7 +62,7 @@ TEST(bitset_test, value_type) {
 
 
 TEST(bitset_test, clearbit) {
-	Bitset<20> bs(7);
+	Bitset<20> bs((char)7);
 
 	bs.clear(0);
 	EXPECT_EQ(6, bs.value());
@@ -75,7 +75,7 @@ TEST(bitset_test, clearbit) {
 }
 
 TEST(bitset_test, setbit) {
-	Bitset<30> bs(0);
+	Bitset<30> bs((unsigned char)0);
 
 	EXPECT_EQ(0, bs.value());
 
@@ -166,4 +166,8 @@ TEST_F(AssertTest, assert_test) {
 
 TEST_F(AssertTest, assert_clear) {
 	ASSERT_DEATH(bs.clear(4), "");
+}
+
+TEST_F(AssertTest, assert_constructor) {
+	ASSERT_DEATH(Bitset<5>(256), "");
 }

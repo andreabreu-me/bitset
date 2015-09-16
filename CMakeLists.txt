@@ -12,3 +12,6 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 enable_testing()
 add_subdirectory(test/unit)
 add_test(unit_test ${EXECUTABLE_OUTPUT_PATH}/test/unit/bitset_unit_test)
+
+
+add_subdirectory(samples)

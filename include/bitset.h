@@ -3,10 +3,12 @@
 
 #include <cstring> //memset
 #include <cassert>
+#include "traits.h"
 #include "iterator.h"
 #include "streamreader.h"
 
 namespace libbitset {
+
 
 typedef unsigned long long size_t;
 typedef unsigned long long uint64_t;
@@ -19,7 +21,7 @@ class Bitset{
 		typedef Iterator<Bitset> iterator;
 
 		// cached values
-		const size_t value_type_size = sizeof(value_type) << 3;
+		const unsigned char value_type_size = sizeof(value_type) << 3;
 		const uint64_t value_type_mask = sizeof(value_type)==sizeof(uint64_t) ? (uint64_t)-1 : ((uint64_t)1 << value_type_size) - 1;
 		const size_t array_length = size_ / value_type_size + ((size_ & (value_type_size - 1)) ? 1 : 0);
 		
@@ -28,27 +30,21 @@ class Bitset{
 			clear_();
 		}
 	
-		// TODO move to BitsetFactory
-		template <typename It>
-		Bitset(It begin, It end) {
-			StreamRedader reader;
-			clear_();
-			reader(begin, end, *this);
-		}
-
-		Bitset(uint64_t rhs) {
-			clear_();	
-			// TODO: use memcpy instead loop?
-			// see also big-endian/little-endian compabilities
+		Bitset(value_type* begin, value_type* end) {
 			size_t idx = 0;
-			while(rhs) {
-				// TODO assert(idx out of range)
-				// or copy min(sizeof(value_),sizeof(uint_64)) bytes
-				value_[idx++]  = rhs & value_type_mask;
-				rhs &= ~value_type_mask;	// uint64 >> 64 - undefined behavior http://en.cppreference.com/w/cpp/language/operator_arithmetic#Bitwise_shift_operators
-				rhs >>= value_type_size;
+			clear_();
+			while(begin != end) {
+				idx = do_read_<value_type>(*begin, idx);
+				++begin;
 			}
 		}
+
+		template <typename T>
+		Bitset(T r) {
+			clear_();	
+			do_read_<T>(r);
+		}
+
 		~Bitset(){}
 
 		size_t size() const {return size_;}
@@ -101,10 +97,25 @@ class Bitset{
 		void clear_() {
 			memset(value_, 0, sizeof(value_));
 		}
-		//Storage new_value_;
+
+		template <typename T, typename traits=traits::numeric<T> > 
+		size_t do_read_(typename traits::type_name rhs, size_t idx = 0) {
+			// TODO: use memcpy instead loop?
+			// see also big-endian/little-endian compabilities
+			while(rhs) {
+				assert(idx < array_length);
+				// or copy min(sizeof(value_),sizeof(uint_64)) bytes
+				value_[idx++]  = rhs & value_type_mask;
+				rhs &= ~value_type_mask;	// uint64 >> 64 - undefined behavior http://en.cppreference.com/w/cpp/language/operator_arithmetic#Bitwise_shift_operators
+				rhs >>= value_type_size;
+			}
+			return idx;
+		}
+
+	private:
 		value_type value_[(size_ >> (sizeof(value_type) + 2)) + 
 			((size_ & ((sizeof(value_type) << 3) - 1)) ? 1 : 0)];
 };// Bitset
 
 };// namespace
-#endif// __BITSET_H__
+#endif// __LIBBITSET_BITSET_H__
