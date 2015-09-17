@@ -6,10 +6,8 @@
 #include <ostream>	// ostream << 
 #include "traits.h"
 #include "iterator.h"
-#include "streamreader.h"
 
 namespace libbitset {
-
 
 typedef unsigned long long size_t;
 typedef unsigned long long uint64_t;
@@ -22,10 +20,9 @@ class Bitset{
 		typedef Iterator<Bitset> iterator;
 
 		// cached values
-		const unsigned char value_type_size = sizeof(value_type) << 3;
-		const uint64_t value_type_mask = sizeof(value_type)==sizeof(uint64_t) ? (uint64_t)-1 : ((uint64_t)1 << value_type_size) - 1;
-		const size_t array_length = size_ / value_type_size + ((size_ & (value_type_size - 1)) ? 1 : 0);
-		
+		static const unsigned char value_type_size;
+		static const uint64_t value_type_mask;
+		static const size_t array_length;
 
 		Bitset(){
 			clear_();
@@ -88,20 +85,20 @@ class Bitset{
 			return res;
 		}
 	private:
+		// clear all bits
 		void clear_() {
 			memset(value_, 0, sizeof(value_));
 		}
 
 		template <typename T, typename traits=traits::numeric<T> > 
 		size_t do_read_(typename traits::type_name rhs, size_t idx = 0) {
-			// TODO: use memcpy instead loop?
-			// see also big-endian/little-endian compabilities
 			while(rhs) {
 				assert(idx < array_length);
-				// or copy min(sizeof(value_),sizeof(uint_64)) bytes
 				value_[idx++]  = rhs & value_type_mask;
-				rhs &= ~value_type_mask;	// uint64 >> 64 - undefined behavior http://en.cppreference.com/w/cpp/language/operator_arithmetic#Bitwise_shift_operators
-				rhs >>= value_type_size;
+				if (sizeof(rhs) > sizeof(value_type))	// uint64 >> 64 - undefined behavior http://en.cppreference.com/w/cpp/language/operator_arithmetic#Bitwise_shift_operators
+					rhs >>= value_type_size;
+				else
+					break;
 			}
 			return idx;
 		}
@@ -110,6 +107,18 @@ class Bitset{
 		value_type value_[(size_ >> (sizeof(value_type) + 2)) + 
 			((size_ & ((sizeof(value_type) << 3) - 1)) ? 1 : 0)];
 };// Bitset
+
+
+// static members
+template <size_t size_, typename value_type>
+const unsigned char Bitset<size_,value_type>::value_type_size = sizeof(value_type) << 3;
+
+template <size_t size_, typename value_type>
+const uint64_t Bitset<size_,value_type>::value_type_mask = sizeof(value_type)==sizeof(uint64_t) ? (uint64_t)-1 : ((uint64_t)1 << value_type_size) - 1;
+
+template <size_t size_, typename value_type>
+const size_t Bitset<size_,value_type>::array_length = size_ / value_type_size + ((size_ & (value_type_size - 1)) ? 1 : 0);
+// --static members
 
 };// namespace
 

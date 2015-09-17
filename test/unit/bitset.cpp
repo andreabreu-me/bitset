@@ -138,6 +138,15 @@ TEST(bitset_test, bigbitset){
 	EXPECT_EQ(1<<30, bs.value());
 }
 
+TEST(bitset_test, copy){
+	Bitset<4> a(12), b;
+	Bitset<4> c(a);
+	b = a;
+
+	EXPECT_EQ(a.value(), b.value());
+	EXPECT_EQ(a.value(), c.value());
+}
+
 TEST(bitset_test, streamreader) {
 	unsigned char data[4] = {1,2,4,8};
 	unsigned long ui = 1 | 2 << 8 | 4 << 16 | 8 << 24;
